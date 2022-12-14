@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'mei-ads-app';
+
+  csvInputChange(fileInputEvent: any) {
+    console.log(fileInputEvent.target.files[0]);
+  }
 }
