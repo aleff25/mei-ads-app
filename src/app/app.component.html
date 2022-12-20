@@ -7,6 +7,7 @@
   <div class="content">
     <button mat-raised-button color="primary" routerLink="">Home</button>
     <button mat-raised-button color="primary" routerLink="/schedule">Schedule</button>
+    <button mat-raised-button color="primary" routerLink="/create-appointment">Create new Appointment</button>
 
     <div>
       <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" accept=".xlsx"/>

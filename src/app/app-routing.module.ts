@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () => import('./schedule/schedule.module').then(m => m.ScheduleModule)
   },
   {
+    path: 'create-appointment',
+    loadChildren: () => import('./create-appointment/create-appointment.module').then(m => m.CreateAppointmentModule)
+  },
+  {
     path: '',
     redirectTo: '',
     pathMatch: 'full'

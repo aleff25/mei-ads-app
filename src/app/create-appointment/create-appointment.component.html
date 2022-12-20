@@ -1,0 +1,72 @@
+<div [formGroup]="recurringForm" class="form-group">
+  <div class="font-weight-bold">
+    <label>Intervalo de datas</label>
+  </div>
+
+  <div class="form-inline mb-2">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Selecione o intervalo de datas</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="startDate" placeholder="Start date">
+        <input matEndDate formControlName="endDate" placeholder="End date">
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="recurringForm.controls['startDate'].hasError('matStartDateInvalid')">Data inicial inválida</mat-error>
+      <mat-error *ngIf="recurringForm.controls['endDate'].hasError('matEndDateInvalid')">Data final inválida</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class=" mb-1">
+    <label class="font-weight-bold">Frequência</label>
+  </div>
+
+  <div class="">
+
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      formControlName="frequency"
+      [(ngModel)]="frequency">
+      <mat-radio-button class="example-radio-button" *ngFor="let fre of frequencies" [value]="fre.value">
+        {{fre.name}}
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <ng-container *ngIf="f.frequency.value === Frequency.WEEKLY">
+    <div class=" mb-1">
+      <label class="font-weight-bold">Repeat on</label>
+    </div>
+
+    <div class="btn-group btn-group-toggle mb-2" formArrayName="onWeekday">
+      <input *ngFor="let control of weeklyForm.controls"
+        type="checkbox" id="checkbox-1" value="value-1" [formControl]="$any(control)" />
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="f.frequency.value === Frequency.MONTHLY">
+    <div class="">
+      <mat-form-field appearance="fill">
+        <mat-label>Custom calendar header</mat-label>
+        <input matInput formControlName="onMonthday" [matDatepicker]="p2">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="p2"></mat-datepicker-toggle>
+        <mat-datepicker #p2></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </ng-container>
+
+  <div class="">
+    <div class="form-control-plaintext">
+      <p class="font-weight-bold">Numero de ocorrências: {{ dates.length }}</p>
+      <p class="font-weight-bold">Datas</p>
+      <span class="d-inline-block mr-3" *ngFor="let date of dates">
+        {{ date | date:'yyyy-MM-dd' }}
+      </span>
+    </div>
+  </div>
+</div>
