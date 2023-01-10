@@ -12,6 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CreateAppointmentRoutingModule } from './create-appointment-routing.module';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -39,6 +41,8 @@ import { CurricularUnitsService } from '../services/curricular-units/curricular-
     MatNativeDateModule,
     MatRadioModule,
     NgbModule,
+    MatGridListModule,
+    MatSnackBarModule,
     CreateAppointmentRoutingModule
   ],
   providers: [

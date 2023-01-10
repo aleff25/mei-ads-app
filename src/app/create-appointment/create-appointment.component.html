@@ -1,9 +1,69 @@
-<div [formGroup]="recurringForm" class="form-group">
+<form [formGroup]="recurringForm"
+class="form-group"
+  (ngSubmit)="onSubmit()">
+
+  <div class="font-weight-bold">
+    <label>Definições do agendamento</label>
+  </div>
+
+  <mat-grid-list cols="6" rowHeight="100px" gutterSize="5px">
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Salas de aula</mat-label>
+        <mat-select [(ngModel)]="classroom" formControlName="classroom" name="classroom">
+            <mat-option *ngFor="let classroom of classrooms" [value]="classroom">
+                {{classroom.name}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Cursos</mat-label>
+        <mat-select formControlName="course" name="course">
+            <mat-option *ngFor="let course of courses" [value]="course.id">
+                {{course.name}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Unidades curriculares</mat-label>
+        <mat-select formControlName="curricularUnit" name="curricularUnit">
+            <mat-option *ngFor="let curricularUnit of curricularUnits" [value]="curricularUnit.id">
+                {{curricularUnit.name}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+  <div class="font-weight-bold">
+    <label>Capacidade da sala</label>
+  </div>
+
+  <div class="form-capacity">
+    <div *ngIf="classroomCapacity">
+      <p class="font-weight-regular" style="margin-right: 0.2rem;">Capacidade máxima: {{ classroomCapacity }}</p>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Capacidade</mat-label>
+      <input type="number" formControlName="capacity" matInput placeholder="Capacidade">
+    </mat-form-field>
+  </div>
+
   <div class="font-weight-bold">
     <label>Intervalo de datas</label>
   </div>
 
   <div class="form-inline mb-2">
+
 
     <mat-form-field appearance="fill">
       <mat-label>Selecione o intervalo de datas</mat-label>
@@ -20,6 +80,7 @@
     </mat-form-field>
   </div>
 
+  <br/>
   <div class=" mb-1">
     <label class="font-weight-bold">Frequência</label>
   </div>
@@ -65,8 +126,73 @@
       <p class="font-weight-bold">Numero de ocorrências: {{ dates.length }}</p>
       <p class="font-weight-bold">Datas</p>
       <span class="d-inline-block mr-3" *ngFor="let date of dates">
-        {{ date | date:'yyyy-MM-dd' }}
+        {{ date | date:'dd-MM-yyyy' }}
       </span>
     </div>
   </div>
-</div>
+
+  <div class=" mb-1">
+    <label class="font-weight-bold">Turno</label>
+  </div>
+
+  <mat-grid-list cols="6" gutterSize="5px">
+
+    <mat-grid-tile>
+      <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        formControlName="shift"
+        [(ngModel)]="shift">
+        <mat-radio-button *ngFor="let s of shifts" [value]="s.value">
+          {{s.name}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Hora inicial</mat-label>
+        <mat-select formControlName="initial_time" name="initial_time">
+
+            <div *ngIf="shift == 'DIURNO'; else postWorkSchedule">
+              <mat-option *ngFor="let day of day_schedule" [value]="day">
+                  {{day}}
+              </mat-option>
+            </div>
+
+            <ng-template #postWorkSchedule>
+              <mat-option *ngFor="let day of post_work_schedule" [value]="day">
+                {{day}}
+            </mat-option>
+            </ng-template>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Hora final</mat-label>
+        <mat-select formControlName="final_time" name="final_time">
+
+            <div *ngIf="shift == 'DIURNO'; else postWorkSchedule">
+              <mat-option *ngFor="let day of day_schedule" [value]="day">
+                  {{day}}
+              </mat-option>
+            </div>
+
+            <ng-template #postWorkSchedule>
+              <mat-option *ngFor="let day of post_work_schedule" [value]="day">
+                {{day}}
+            </mat-option>
+            </ng-template>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <div align="center">
+    <button mat-raised-button color="accent" type="submit">
+      <mat-icon>add_task</mat-icon>
+      Enviar agendamento
+    </button>
+  </div>
+</form>
