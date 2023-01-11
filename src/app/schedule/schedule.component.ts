@@ -1,31 +1,20 @@
-import { Component } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { Component, ViewChild } from '@angular/core';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { AppointmentsService } from '../services/appointments/appointments.service';
+import { ClassroomsService } from '../services/classrooms/classrooms.service';
+import { CoursesService } from '../services/courses/courses.service';
+import { CurricularUnitsService } from '../services/curricular-units/curricular-units.service';
+import { IAppointment, IGetAllAppointment } from '../shared/entities/appointment.interface';
+import { IClassroom } from '../shared/entities/classroom.interface';
+import { ICourse } from '../shared/entities/course.interface';
+import { ICurricularUnit } from '../shared/entities/curricular-units.interface';
 interface Food {
   value: string;
   viewValue: string;
 }
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
 
 @Component({
   selector: 'app-schedule',
@@ -34,17 +23,18 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class ScheduleComponent {
 
+  @ViewChild(MatSort) sort!: MatSort;
+
   displayedColumns: string[] = ['courses',
     'curricularUnit',
     'shift',
-    'class',
     'date',
     'classroom',
     'capacityClassroom',
     'crowded',
     'capacity',
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+
 
   selectedValue!: string;
   selectedCar!: string;
@@ -55,6 +45,38 @@ export class ScheduleComponent {
     {value: 'tacos-2', viewValue: 'Tacos'},
   ];
 
+  classrooms: IClassroom[] = [];
+  courses: ICourse[] = [];
+  curricularUnits: ICurricularUnit[] = [];
+
+  classroom!: IClassroom;
+  course!: ICourse;
+  curricularUnit!: ICurricularUnit;
+
+  appointments: IGetAllAppointment[] = [];
+  dataSource: MatTableDataSource<IGetAllAppointment> = new MatTableDataSource(this.appointments);
+
+  constructor(
+    private _liveAnnouncer: LiveAnnouncer,
+    private classroomsService: ClassroomsService,
+    private coursesService: CoursesService,
+    private curricularUnitsService: CurricularUnitsService,
+    private appointmentsService: AppointmentsService) {}
+
+  ngOnInit() {
+    this.classroomsService.getAll().subscribe( (data) => this.classrooms = data);
+    this.coursesService.getAll().subscribe( (data) => this.courses = data);
+    this.curricularUnitsService.getAll().subscribe( (data) => this.curricularUnits = data);
+    this.appointmentsService.getAll().subscribe( (data) => {
+      this.appointments = data;
+
+      this.dataSource = new MatTableDataSource(this.appointments);
+    })
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -64,6 +86,18 @@ export class ScheduleComponent {
   onSubmit(): void {
     // Process checkout data here
     console.warn('Your order has been submitted');
+  }
+
+  announceSortChange(sortState: Sort) {
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 
 }

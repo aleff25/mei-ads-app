@@ -11,6 +11,7 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-boo
 import { Frequency, Options, RRule } from 'rrule';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppointmentsService } from '../services/appointments/appointments.service';
 
 export function toNativeDate(ngbDate: NgbDate): Date {
   return new Date(Date.UTC(ngbDate.year, ngbDate.month - 1, ngbDate.day));
@@ -98,12 +99,13 @@ export class CreateAppointmentComponent implements OnInit {
     public formatter: NgbDateParserFormatter,
     private classroomsService: ClassroomsService,
     private coursesService: CoursesService,
-    private curricularUnitsService: CurricularUnitsService) {}
+    private curricularUnitsService: CurricularUnitsService,
+    private appointmentsService: AppointmentsService) {}
 
   ngOnInit() {
-    this.classroomsService.getAll().subscribe( (data) => this.classrooms = data)
-    this.coursesService.getAll().subscribe( (data) => this.courses = data)
-    this.curricularUnitsService.getAll().subscribe( (data) => this.curricularUnits = data)
+    this.classroomsService.getAll().subscribe( (data) => this.classrooms = data);
+    this.coursesService.getAll().subscribe( (data) => this.courses = data);
+    this.curricularUnitsService.getAll().subscribe( (data) => this.curricularUnits = data);
     this.today = toNativeDate(this.calendar.getToday());
     this.date = this.calendar.getToday();
     this.initRecurringForm();
@@ -116,32 +118,23 @@ export class CreateAppointmentComponent implements OnInit {
     const horaInicial = this.f.initial_time.value;
     const horaFinal = this.f.final_time.value;
     const { hour, minute } = this.getHourAndMinute(horaInicial);
-    const startDates = this.dates.map((d: Date) => {
-      d.setHours(hour);
-      d.setMinutes(minute);
-
-      return d;
-    });
-
+    const startDates: Date[] = this.getDateWithHours(structuredClone(this.dates), hour, minute);
     const finalTime = this.getHourAndMinute(horaFinal);
-    const endDates = this.dates.map((d: Date) => {
-      d.setHours(finalTime.hour);
-      d.setMinutes(finalTime.minute);
-
-      return d;
-    });
-
+    const  endDates: Date[] = this.getDateWithHours(structuredClone(this.dates), finalTime.hour, finalTime.minute);
     const appointment = {
-      classroom: this.f.classroom.value.id,
-      capacity: this.f.capacity,
-      course: this.f.course.value,
-      curricularUnit: this.f.curricularUnit.value,
+      classroomId: this.f.classroom.value.id,
+      capacity: this.f.capacity.value,
+      courseId: this.f.course.value,
+      curricularUnitId: this.f.curricularUnit.value,
       shift: this.f.shift.value,
+      features: ['MASTER CLASSROOM'],
       startDates,
       endDates
     };
 
     console.log(appointment);
+
+    this.appointmentsService.create(appointment);
   }
 
 
@@ -150,6 +143,15 @@ export class CreateAppointmentComponent implements OnInit {
     const minute = time.includes('30') ? 30 : 0;
 
     return { hour, minute }
+  }
+
+  private getDateWithHours(dates: Date[], hour: number, minute: number) {
+    return dates.map((d: Date) => {
+      d.setHours(hour);
+      d.setMinutes(minute);
+
+      return d;
+    });
   }
 
   onDateSelection(date: NgbDate): void {

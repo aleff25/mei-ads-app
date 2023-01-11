@@ -11,8 +11,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSortModule } from '@angular/material/sort';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AppointmentsService } from '../services/appointments/appointments.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ClassroomsService } from '../services/classrooms/classrooms.service';
+import { CoursesService } from '../services/courses/courses.service';
+import { CurricularUnitsService } from '../services/curricular-units/curricular-units.service';
 
 @NgModule({
   declarations: [
@@ -20,9 +27,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
     MatTableModule,
+    MatSortModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -31,6 +40,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatDatepickerModule,
     MatNativeDateModule,
     ScheduleRoutingModule
+  ],
+  providers: [
+    ClassroomsService,
+    CoursesService,
+    CurricularUnitsService,
+    AppointmentsService,
   ]
 })
 export class ScheduleModule { }

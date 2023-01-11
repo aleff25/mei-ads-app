@@ -21,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ClassroomsService } from '../services/classrooms/classrooms.service';
 import { CoursesService } from '../services/courses/courses.service';
 import { CurricularUnitsService } from '../services/curricular-units/curricular-units.service';
+import { AppointmentsService } from '../services/appointments/appointments.service';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { CurricularUnitsService } from '../services/curricular-units/curricular-
     ClassroomsService,
     CoursesService,
     CurricularUnitsService,
+    AppointmentsService,
   ]
 })
 export class CreateAppointmentModule { }
