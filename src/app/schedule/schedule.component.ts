@@ -1,6 +1,7 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, ViewChild } from '@angular/core';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AppointmentsService } from '../services/appointments/appointments.service';
@@ -58,6 +59,7 @@ export class ScheduleComponent {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
+    private snackBar: MatSnackBar,
     private classroomsService: ClassroomsService,
     private coursesService: CoursesService,
     private curricularUnitsService: CurricularUnitsService,
@@ -67,11 +69,13 @@ export class ScheduleComponent {
     this.classroomsService.getAll().subscribe( (data) => this.classrooms = data);
     this.coursesService.getAll().subscribe( (data) => this.courses = data);
     this.curricularUnitsService.getAll().subscribe( (data) => this.curricularUnits = data);
-    this.appointmentsService.getAll().subscribe( (data) => {
-      this.appointments = data;
-
-      this.dataSource = new MatTableDataSource(this.appointments);
-    })
+    this.appointmentsService.getAll().subscribe({
+      error: (e) => this.snackBar.open(e.message, 'Fechar', { duration: 2500}),
+      next: (data: IGetAllAppointment[]) => {
+        this.appointments = data;
+        this.dataSource = new MatTableDataSource(this.appointments);
+      }
+    });
   }
 
   ngAfterViewInit() {

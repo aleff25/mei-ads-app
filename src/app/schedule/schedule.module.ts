@@ -20,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ClassroomsService } from '../services/classrooms/classrooms.service';
 import { CoursesService } from '../services/courses/courses.service';
 import { CurricularUnitsService } from '../services/curricular-units/curricular-units.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { CurricularUnitsService } from '../services/curricular-units/curricular-
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSnackBarModule,
     ScheduleRoutingModule
   ],
   providers: [

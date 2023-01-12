@@ -132,8 +132,6 @@ export class CreateAppointmentComponent implements OnInit {
       endDates
     };
 
-    console.log(appointment);
-
     this.appointmentsService.create(appointment);
   }
 
