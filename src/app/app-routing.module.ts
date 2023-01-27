@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./create-appointment/create-appointment.module').then(m => m.CreateAppointmentModule)
   },
   {
+    path: 'edit-appointment',
+    loadChildren: () => import('./edit-appointment/edit-appointment.module').then(m => m.EditAppointmentModule)
+  },
+  {
     path: '',
     redirectTo: '',
     pathMatch: 'full'

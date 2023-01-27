@@ -5,9 +5,9 @@
                 <td>
                     <mat-form-field appearance="fill">
                         <mat-label>Salas de aula</mat-label>
-                        <mat-select [(ngModel)]="classroom" name="food">
-                          <mat-option *ngFor="let c of classrooms" [value]="c.id">
-                            {{c.name}}
+                        <mat-select [(ngModel)]="this.form.classroom" name="classroom">
+                          <mat-option *ngFor="let c of classroomsName" [value]="c">
+                            {{c}}
                           </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -15,9 +15,9 @@
                 <td>
                     <mat-form-field appearance="fill">
                         <mat-label>Cursos</mat-label>
-                        <mat-select [(ngModel)]="course" name="food">
-                          <mat-option *ngFor="let cou of courses" [value]="cou.id">
-                            {{cou.name}}
+                        <mat-select [(ngModel)]="this.form.course" name="course">
+                          <mat-option *ngFor="let cou of coursesName" [value]="cou">
+                            {{cou}}
                           </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -25,9 +25,9 @@
                 <td>
                     <mat-form-field appearance="fill">
                         <mat-label>Unidade curriculares</mat-label>
-                        <mat-select [(ngModel)]="curricularUnit" name="food">
-                          <mat-option *ngFor="let curricular of curricularUnits" [value]="curricular.id">
-                            {{curricular.name}}
+                        <mat-select [(ngModel)]="this.form.curricularUnit" name="curricularUnit">
+                          <mat-option *ngFor="let curricular of curricularUnitsName" [value]="curricular">
+                            {{curricular}}
                           </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -53,53 +53,67 @@
         </button>
     </form>
 
-    <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8" (matSortChange)="announceSortChange($event)">
+    <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
 
         <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
+
+
         <!-- Position Column -->
-        <ng-container matColumnDef="courses">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+        <ng-container matColumnDef="courseEntity.name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="courseEntity.name">
             Curso
           </th>
           <td mat-cell *matCellDef="let element"> {{element.courseEntity.name}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="curricularUnit">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef> Unidade curricular </th>
+        <ng-container matColumnDef="curricularUnitEntity.name">
+            <th mat-header-cell mat-sort-header="curricularUnitEntity.name" *matHeaderCellDef> Unidade curricular </th>
             <td mat-cell *matCellDef="let element"> {{element.curricularUnitEntity.name}} </td>
         </ng-container>
 
         <!-- Name Column -->
-        <ng-container matColumnDef="shift">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef> Turno </th>
+        <ng-container matColumnDef="courseEntity.shift">
+          <th mat-header-cell mat-sort-header="courseEntity.shift" *matHeaderCellDef> Turno </th>
           <td mat-cell *matCellDef="let element"> {{element.courseEntity.shift}} </td>
         </ng-container>
 
         <!-- Symbol Column -->
-        <ng-container matColumnDef="date">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef> Dia </th>
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell mat-sort-header="startDate" *matHeaderCellDef> Dia </th>
           <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="classroom">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef> Sala de aula </th>
-            <td mat-cell *matCellDef="let element"> {{element.classroomEntity.name}} </td>
+        <ng-container matColumnDef="classroomEntity.name">
+            <th mat-header-cell mat-sort-header="classroomEntity.name" *matHeaderCellDef> Sala de aula </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              {{ element.classroomEntity.name }}
+            </td>
         </ng-container>
 
-        <ng-container matColumnDef="capacityClassroom">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef> Capacidade sala de aula </th>
+        <ng-container matColumnDef="classroomEntity.capacity">
+            <th mat-header-cell mat-sort-header="classroomEntity.capacity" *matHeaderCellDef> Capacidade sala de aula </th>
             <td mat-cell *matCellDef="let element"> {{element.classroomEntity.capacity}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="crowded">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef> Características da sala pedida </th>
+        <ng-container matColumnDef="caracteristic">
+            <th mat-header-cell mat-sort-header="caracteristic" *matHeaderCellDef> Características da sala pedida </th>
             <td mat-cell *matCellDef="let element"> {{element.caracteristic}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="capacity">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef> Capacidade </th>
+        <ng-container matColumnDef="capacityRequired">
+            <th mat-header-cell mat-sort-header="capacityRequired" *matHeaderCellDef> Capacidade </th>
             <td mat-cell *matCellDef="let element"> {{element.capacityRequired}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <button mat-icon-button class="material-icons app-toolbar-menu save-button"
+                matTooltip="Edit" color="primary" (click)="editSchedule(element)">
+                <mat-icon>edit</mat-icon>
+            </button>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

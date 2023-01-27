@@ -19,9 +19,24 @@ export class AppointmentsService {
     return this.http.get<IGetAllAppointment[]>(resourceURL);
   }
 
+  getById(id: string): Observable<IGetAllAppointment> {
+    const resourceURL = `${this.baseURL}/appointments/${id}`;
+    return this.http.get<IGetAllAppointment>(resourceURL);
+  }
+
   create(appointment: ICreateAppointment): void {
     const resourceURL = `${this.baseURL}/appointments`;
     this.http.post(resourceURL, appointment)
+      .subscribe({
+        next: () => console.log(),
+        error: (e) => this.snackBar.open(e.message, 'Fechar', { duration: 2500}),
+        complete: () => this.snackBar.open('Criação do agendamento realizada com sucesso!', 'Fechar', { duration: 2500})
+      });
+  }
+
+  update(appointment: IAppointment) {
+    const resourceURL = `${this.baseURL}/appointments`;
+    this.http.put(resourceURL, appointment)
       .subscribe({
         next: () => console.log(),
         error: (e) => this.snackBar.open(e.message, 'Fechar', { duration: 2500}),

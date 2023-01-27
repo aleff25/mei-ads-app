@@ -1,0 +1,49 @@
+
+<form class="filter-group" (ngSubmit)="onSubmit()">
+
+  <br/>
+  <div class="font-weight-bold">
+    <label>Definições do agendamento</label>
+  </div>
+
+  <br/>
+  <div>
+    <label class="font-weight-bold">Data do agendamento</label>
+    <p>{{ appointment.startDate }} </p>
+  </div>
+
+  <div>
+    <label class="font-weight-bold">Curso</label>
+    <p>{{ appointment.courseEntity.name }} </p>
+  </div>
+
+  <mat-grid-list cols="6" rowHeight="100px" gutterSize="5px">
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Salas de aula</mat-label>
+        <mat-select [(ngModel)]="this.form.classroom" name="classroom">
+          <mat-option *ngFor="let c of classroomsName" [value]="c">
+            {{c}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-form-field appearance="fill">
+        <mat-label>Unidades curriculares</mat-label>
+        <mat-select [(ngModel)]="this.form.curricularUnit" name="curricularUnit">
+          <mat-option *ngFor="let c of curricularUnitsName" [value]="c">
+            {{c}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+  <button mat-raised-button color="accent" type="submit">
+    Salvar alterações
+  </button>
+</form>
